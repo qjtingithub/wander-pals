@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profile - Traveller Assistant</title>
+</head>
+<body>
+    <h1>Profile</h1>
+    <form action="{{ url_for('profile') }}" method="post">
+        <label for="location">Location:</label>
+        <input type="text" id="location" name="location" value="{{ user.location }}"><br><br>
+        <label for="budget">Budget:</label>
+        <input type="text" id="budget" name="budget" value="{{ user.budget }}"><br><br>
+        <label for="interests">Interests:</label>
+        <input type="text" id="interests" name="interests" value="{{ user.interests }}"><br><br>
+        <input type="submit" value="Update">
+    </form>
+    <a href="{{ url_for('itinerary') }}">Create Itinerary</a><br>
+    <a href="{{ url_for('log') }}">Write Travel Log</a><br>
+    <a href="{{ url_for('recommendations') }}">View Recommendations</a><br>
+    <a href="{{ url_for('routes') }}">View Routes</a>
+</body>
+</html>
