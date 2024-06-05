@@ -22,9 +22,10 @@ def register():
         location = request.form['location']
         budget = request.form['budget']
         interests = request.form['interests']
-        
-        new_user = User(username=username, password=password, age=age, gender=gender,
-                        location=location, budget=budget, interests=interests)
+        companion_requirements = request.form['companion_requirements']
+
+        new_user = User(username=username, password=password, age=age, gender=gender, location=location,
+                        budget=budget, interests=interests, companion_requirements=companion_requirements)
         db.session.add(new_user)
         db.session.commit()
         return redirect(url_for('login'))

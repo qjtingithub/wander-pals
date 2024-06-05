@@ -11,6 +11,7 @@ class User(db.Model):
     location = db.Column(db.String(120), nullable=False)
     budget = db.Column(db.String(120), nullable=False)
     interests = db.Column(db.String(500), nullable=False)
+    companion_requirements = db.Column(db.String(120))  # 新增字段
 
 class Itinerary(db.Model):
     id = db.Column(db.Integer, primary_key=True)
