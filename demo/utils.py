@@ -13,7 +13,7 @@ def find_team(user):
     
     recommendations = []
     for companion in potential_companions:
-        if all(req in companion.interests for req in requirements):
+        if all(req.strip().lower() in companion.interests.lower() for req in requirements):
             recommendations.append(companion)
     
     return recommendations
