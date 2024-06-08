@@ -1,3 +1,5 @@
+# models.py
+
 from flask_sqlalchemy import SQLAlchemy
 
 db = SQLAlchemy()
@@ -34,3 +36,26 @@ class Recommendation(db.Model):
     recommended_user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
     user = db.relationship('User', foreign_keys=[user_id], backref=db.backref('recommendations', lazy=True))
     recommended_user = db.relationship('User', foreign_keys=[recommended_user_id], backref=db.backref('recommended_to', lazy=True))
+
+class Team(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(120), nullable=False)
+    itinerary_id = db.Column(db.Integer, db.ForeignKey('itinerary.id'), nullable=False)
+    creator_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+    itinerary = db.relationship('Itinerary', backref=db.backref('teams', lazy=True))
+    creator = db.relationship('User', backref=db.backref('created_teams', lazy=True))
+    members = db.relationship('User', secondary='team_members', backref=db.backref('teams', lazy=True))
+
+class TeamMember(db.Model):
+    __tablename__ = 'team_members'
+    team_id = db.Column(db.Integer, db.ForeignKey('team.id'), primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), primary_key=True)
+
+class Invitation(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    sender_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+    receiver_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+    status = db.Column(db.String(20), nullable=False, default='pending')
+    sender = db.relationship('User', foreign_keys=[sender_id], backref='sent_invitations')
+    receiver = db.relationship('User', foreign_keys=[receiver_id], backref='received_invitations')
+

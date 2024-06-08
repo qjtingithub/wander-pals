@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Invitations - Traveller Assistant</title>
+</head>
+<body>
+    <h1>Invitations</h1>
+    
+    <h2>Received Invitations</h2>
+    <ul>
+        {% for invitation in received_invitations %}
+        <li>
+            Invitation from {{ invitation.sender.username }} - Status: {{ invitation.status }}
+            {% if invitation.status == 'pending' %}
+            <form action="{{ url_for('respond_invitation', invitation_id=invitation.id, response='accepted') }}" method="post" style="display:inline;">
+                <input type="submit" value="Accept">
+            </form>
+            <form action="{{ url_for('respond_invitation', invitation_id=invitation.id, response='rejected') }}" method="post" style="display:inline;">
+                <input type="submit" value="Reject">
+            </form>
+            {% endif %}
+        </li>
+        {% endfor %}
+    </ul>
+
+    <h2>Sent Invitations</h2>
+    <ul>
+        {% for invitation in sent_invitations %}
+        <li>
+            Invitation to {{ invitation.receiver.username }} - Status: {{ invitation.status }}
+        </li>
+        {% endfor %}
+    </ul>
+    
+    <a href="{{ url_for('profile') }}">Back to Profile</a>
+</body>
+</html>

@@ -2,16 +2,29 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Recommendations - Traveller Assistant</title>
+    <title>Recommendations</title>
 </head>
 <body>
-    <h1>Recommendations</h1>
-    <ul>
-        {% for recommendation in recommendations %}
-        <li>{{ recommendation.username }} - {{ recommendation.interests }}</li>
-        {% endfor %}
-    </ul>
-    <a href="{{ url_for('profile') }}">Back</a><br>
+    <h1>Recommendation</h1>
+    {% if recommendation %}
+        <p>Username: {{ recommendation.username }}</p>
+        <p>Age: {{ recommendation.age }}</p>
+        <p>Gender: {{ recommendation.gender }}</p>
+        <p>Location: {{ recommendation.location }}</p>
+        <p>Budget: {{ recommendation.budget }}</p>
+        <p>Interests: {{ recommendation.interests }}</p>
+        <p>Score: {{ score }}</p>
+        
+        <form method="post">
+            <button type="submit" name="action" value="next">Next Recommendation</button>
+            <button type="submit" name="action" value="invite">Invite</button>
+        </form>
+    {% else %}
+        <p>No more recommendations available.</p>
+    {% endif %}
+    
+    <form method="post" action="{{ url_for('exit_team_creation') }}">
+        <button type="submit">Exit</button>
+    </form>
 </body>
 </html>

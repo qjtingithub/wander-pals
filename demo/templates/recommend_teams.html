@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Recommend Teams - Traveller Assistant</title>
+</head>
+<body>
+    <h1>Recommend Teams</h1>
+    <p>Team Name: {{ team.name }}</p>
+    <p>Itinerary: {{ team.itinerary.destination }} - {{ team.itinerary.time }} - {{ team.itinerary.price }}</p>
+    <p>Creator: {{ team.creator.username }}</p>
+    
+    <form method="post">
+        <button type="submit" name="action" value="next">Next Team</button>
+        <button type="submit" name="action" value="request_join">Request to Join</button>
+    </form>
+</body>
+</html>

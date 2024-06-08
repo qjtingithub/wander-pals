@@ -16,10 +16,11 @@
         <input type="text" id="interests" name="interests" value="{{ user.interests }}"><br><br>
         <input type="submit" value="Update">
     </form>
-    <a href="{{ url_for('itinerary') }}">Create Itinerary</a><br>
+    <a href="{{ url_for('create_itinerary') }}">Create Itinerary</a><br>
     <a href="{{ url_for('log') }}">Write Travel Log</a><br>
     <a href="{{ url_for('recommendations') }}">View Recommendations</a><br>
-    <a href="{{ url_for('routes') }}">View Routes</a><br><br>
+    <a href="{{ url_for('routes') }}">View Routes</a><br>
+    <a href="{{ url_for('invitations') }}">View Invitations</a><br><br>
     <a href="{{ url_for('index') }}">Logout</a>
 </body>
 </html>
