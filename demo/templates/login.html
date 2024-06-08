@@ -1,20 +1,28 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login - Traveller Assistant</title>
+    <title>登录 - 旅行助手</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
 </head>
 <body>
-    <h1>Login</h1>
-    <form action="{{ url_for('login') }}" method="post">
-        <label for="username">Username:</label>
-        <input type="text" id="username" name="username"><br><br>
-        <label for="password">Password:</label>
-        <input type="password" id="password" name="password"><br><br>
-        <input type="submit" value="Login">
-    </form>
-    <a href="{{ url_for('register') }}">Don't have an account? Register</a><br>
-
+    <header>
+        <h1>登录</h1>
+    </header>
+    <main>
+        <form method="POST">
+            <label for="username">用户名:</label>
+            <input type="text" id="username" name="username" required>
+            
+            <label for="password">密码:</label>
+            <input type="password" id="password" name="password" required>
+            
+            <button type="submit">登录</button>
+        </form>
+    </main>
+    <footer>
+        <p>&copy; 2024 旅行助手。保留所有权利。</p>
+    </footer>
 </body>
 </html>

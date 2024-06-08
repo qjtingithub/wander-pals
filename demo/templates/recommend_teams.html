@@ -1,19 +1,25 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Recommend Teams - Traveller Assistant</title>
+    <title>推荐团队 - 旅行助手</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
 </head>
 <body>
-    <h1>Recommend Teams</h1>
-    <p>Team Name: {{ team.name }}</p>
-    <p>Itinerary: {{ team.itinerary.destination }} - {{ team.itinerary.time }} - {{ team.itinerary.price }}</p>
-    <p>Creator: {{ team.creator.username }}</p>
-    
-    <form method="post">
-        <button type="submit" name="action" value="next">Next Team</button>
-        <button type="submit" name="action" value="request_join">Request to Join</button>
-    </form>
+    <header>
+        <h1>推荐团队</h1>
+    </header>
+    <main>
+        <h2>推荐的团队</h2>
+        <ul>
+            {% for team in recommended_teams %}
+            <li>{{ team.name }} - {{ team.destination }}</li>
+            {% endfor %}
+        </ul>
+    </main>
+    <footer>
+        <p>&copy; 2024 旅行助手。保留所有权利。</p>
+    </footer>
 </body>
 </html>

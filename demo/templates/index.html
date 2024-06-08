@@ -1,13 +1,25 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Home - Traveller Assistant</title>
+    <title>旅行助手</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
 </head>
 <body>
-    <h1>Welcome to Traveller Assistant</h1>
-    <a href="{{ url_for('register') }}">Register</a>
-    <a href="{{ url_for('login') }}">Login</a>
+    <header>
+        <h1>欢迎来到旅行助手</h1>
+    </header>
+    <main>
+        <h2>您的旅行伴侣</h2>
+        <p>规划您的旅行，寻找伴侣，轻松探索世界。</p>
+        <div class="button-container">
+            <a href="{{ url_for('login') }}">登录</a>
+            <a href="{{ url_for('register') }}">注册</a>
+        </div>
+    </main>
+    <footer>
+        <p>&copy; 2024 旅行助手。保留所有权利。</p>
+    </footer>
 </body>
 </html>

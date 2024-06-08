@@ -1,39 +1,25 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Invitations - Traveller Assistant</title>
+    <title>邀请 - 旅行助手</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
 </head>
 <body>
-    <h1>Invitations</h1>
-    
-    <h2>Received Invitations</h2>
-    <ul>
-        {% for invitation in received_invitations %}
-        <li>
-            Invitation from {{ invitation.sender.username }} - Status: {{ invitation.status }}
-            {% if invitation.status == 'pending' %}
-            <form action="{{ url_for('respond_invitation', invitation_id=invitation.id, response='accepted') }}" method="post" style="display:inline;">
-                <input type="submit" value="Accept">
-            </form>
-            <form action="{{ url_for('respond_invitation', invitation_id=invitation.id, response='rejected') }}" method="post" style="display:inline;">
-                <input type="submit" value="Reject">
-            </form>
-            {% endif %}
-        </li>
-        {% endfor %}
-    </ul>
-
-    <h2>Sent Invitations</h2>
-    <ul>
-        {% for invitation in sent_invitations %}
-        <li>
-            Invitation to {{ invitation.receiver.username }} - Status: {{ invitation.status }}
-        </li>
-        {% endfor %}
-    </ul>
-    
-    <a href="{{ url_for('profile') }}">Back to Profile</a>
+    <header>
+        <h1>邀请</h1>
+    </header>
+    <main>
+        <h2>收到的邀请</h2>
+        <ul>
+            {% for invitation in invitations %}
+            <li>{{ invitation.team_name }} - {{ invitation.status }}</li>
+            {% endfor %}
+        </ul>
+    </main>
+    <footer>
+        <p>&copy; 2024 旅行助手。保留所有权利。</p>
+    </footer>
 </body>
 </html>

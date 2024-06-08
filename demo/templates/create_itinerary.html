@@ -1,25 +1,34 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
-    <title>Create Itinerary</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>创建行程 - 旅行助手</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
 </head>
 <body>
-    <h1>Create Itinerary</h1>
-    <form method="post">
-        <label for="destination">Destination:</label>
-        <input type="text" id="destination" name="destination"><br>
-
-        <label for="time">Time:</label>
-        <input type="text" id="time" name="time"><br>
-
-        <label for="price">Price:</label>
-        <input type="text" id="price" name="price"><br>
-
-        <label for="companion_requirements">Companion Requirements:</label>
-        <input type="text" id="companion_requirements" name="companion_requirements"><br>
-
-        <button type="submit">Create Itinerary</button>
-    </form>
+    <header>
+        <h1>创建行程</h1>
+    </header>
+    <main>
+        <form method="POST">
+            <label for="destination">目的地:</label>
+            <input type="text" id="destination" name="destination" required>
+            
+            <label for="time">时间:</label>
+            <input type="text" id="time" name="time" required>
+            
+            <label for="price">价格:</label>
+            <input type="text" id="price" name="price" required>
+            
+            <label for="companion_requirements">伴侣要求:</label>
+            <textarea id="companion_requirements" name="companion_requirements" required></textarea>
+            
+            <button type="submit">创建</button>
+        </form>
+    </main>
+    <footer>
+        <p>&copy; 2024 旅行助手。保留所有权利。</p>
+    </footer>
 </body>
 </html>

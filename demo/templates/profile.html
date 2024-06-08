@@ -1,26 +1,32 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Profile - Traveller Assistant</title>
+    <title>个人资料 - 旅行助手</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
 </head>
 <body>
-    <h1>Profile</h1>
-    <form action="{{ url_for('profile') }}" method="post">
-        <label for="location">Location:</label>
-        <input type="text" id="location" name="location" value="{{ user.location }}"><br><br>
-        <label for="budget">Budget:</label>
-        <input type="text" id="budget" name="budget" value="{{ user.budget }}"><br><br>
-        <label for="interests">Interests:</label>
-        <input type="text" id="interests" name="interests" value="{{ user.interests }}"><br><br>
-        <input type="submit" value="Update">
-    </form>
-    <a href="{{ url_for('create_itinerary') }}">Create Itinerary</a><br>
-    <a href="{{ url_for('log') }}">Write Travel Log</a><br>
-    <a href="{{ url_for('recommendations') }}">View Recommendations</a><br>
-    <a href="{{ url_for('routes') }}">View Routes</a><br>
-    <a href="{{ url_for('invitations') }}">View Invitations</a><br><br>
-    <a href="{{ url_for('index') }}">Logout</a>
+    <header>
+        <h1>个人资料</h1>
+    </header>
+    <main>
+        <h2>欢迎, {{ user.username }}</h2>
+        <p>年龄: {{ user.age }}</p>
+        <p>性别: {{ user.gender }}</p>
+        <p>所在地: {{ user.location }}</p>
+        <p>预算: {{ user.budget }}</p>
+        <p>兴趣: {{ user.interests }}</p>
+        <p>伴侣要求: {{ user.companion_requirements }}</p>
+        <div class="action-buttons" style="margin-top: 2em;">
+            <a href="{{ url_for('create_itinerary') }}">创建行程</a>
+            <a href="{{ url_for('log') }}">写日志</a>
+            <a href="{{ url_for('recommendations') }}">查看推荐</a>
+            <a href="{{ url_for('logout') }}">登出</a>
+        </div>
+    </main>
+    <footer>
+        <p>&copy; 2024 旅行助手。保留所有权利。</p>
+    </footer>
 </body>
 </html>

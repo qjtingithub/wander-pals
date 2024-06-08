@@ -44,6 +44,11 @@ def login():
             return redirect(url_for('profile'))
     return render_template('login.html')
 
+@app.route('/logout')
+def logout():
+    session.clear()
+    return redirect(url_for('index'))
+
 @app.route('/profile', methods=['GET', 'POST'])
 def profile():
     user_id = session.get('user_id')

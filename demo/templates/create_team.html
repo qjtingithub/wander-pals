@@ -1,15 +1,32 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
-    <title>Create Team</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>创建团队 - 旅行助手</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
 </head>
 <body>
-    <h1>Create Team</h1>
-    <form method="post">
-        <p>Do you want to create a team?</p>
-        <button type="submit" name="create_team" value="yes">Yes</button>
-        <button type="submit" name="create_team" value="no">No</button>
-    </form>
+    <header>
+        <h1>创建团队</h1>
+    </header>
+    <main>
+        <form method="POST">
+            <label for="team_name">团队名称:</label>
+            <input type="text" id="team_name" name="team_name" required>
+            
+            <label for="itinerary">选择行程:</label>
+            <select id="itinerary" name="itinerary" required>
+                {% for itinerary in itineraries %}
+                <option value="{{ itinerary.id }}">{{ itinerary.destination }}</option>
+                {% endfor %}
+            </select>
+            
+            <button type="submit">创建</button>
+        </form>
+    </main>
+    <footer>
+        <p>&copy; 2024 旅行助手。保留所有权利。</p>
+    </footer>
 </body>
 </html>

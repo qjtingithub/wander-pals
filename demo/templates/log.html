@@ -1,23 +1,25 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Travel Log - Traveller Assistant</title>
+    <title>写日志 - 旅行助手</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
 </head>
 <body>
-    <h1>Travel Log</h1>
-    <form action="{{ url_for('log') }}" method="post">
-        <label for="content">Content:</label><br>
-        <textarea id="content" name="content" rows="4" cols="50"></textarea><br><br>
-        <input type="submit" value="Submit">
-    </form>
-    <h2>Your Logs</h2>
-    <ul>
-        {% for log in logs %}
-        <li>{{ log.content }}</li>
-        {% endfor %}
-    </ul>
-    <a href="{{ url_for('profile') }}">Back</a><br>
+    <header>
+        <h1>写日志</h1>
+    </header>
+    <main>
+        <form method="POST">
+            <label for="content">内容:</label>
+            <textarea id="content" name="content" required></textarea>
+            
+            <button type="submit">提交</button>
+        </form>
+    </main>
+    <footer>
+        <p>&copy; 2024 旅行助手。保留所有权利。</p>
+    </footer>
 </body>
 </html>

@@ -1,31 +1,46 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Register - Traveller Assistant</title>
+    <title>注册 - 旅行助手</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
 </head>
 <body>
-    <h1>Register</h1>
-    <form action="{{ url_for('register') }}" method="post">
-        <label for="username">Username:</label>
-        <input type="text" id="username" name="username"><br><br>
-        <label for="password">Password:</label>
-        <input type="password" id="password" name="password"><br><br>
-        <label for="age">Age:</label>
-        <input type="number" id="age" name="age"><br><br>
-        <label for="gender">Gender:</label>
-        <input type="text" id="gender" name="gender"><br><br>
-        <label for="location">Location:</label>
-        <input type="text" id="location" name="location"><br><br>
-        <label for="budget">Budget:</label>
-        <input type="text" id="budget" name="budget"><br><br>
-        <label for="interests">Interests:</label>
-        <input type="text" id="interests" name="interests"><br><br>
-        <label for="companion_requirements">Companion Requirements:</label>
-        <input type="text" id="companion_requirements" name="companion_requirements"><br><br>
-        <input type="submit" value="Register">
-    </form>
-    <a href="{{ url_for('login') }}">Already have an account? Log in</a><br>
+    <header>
+        <h1>注册</h1>
+    </header>
+    <main>
+        <form method="POST">
+            <label for="username">用户名:</label>
+            <input type="text" id="username" name="username" required>
+            
+            <label for="password">密码:</label>
+            <input type="password" id="password" name="password" required>
+            
+            <label for="age">年龄:</label>
+            <input type="number" id="age" name="age" required>
+            
+            <label for="gender">性别:</label>
+            <input type="text" id="gender" name="gender" required>
+            
+            <label for="location">所在地:</label>
+            <input type="text" id="location" name="location" required>
+            
+            <label for="budget">预算:</label>
+            <input type="text" id="budget" name="budget" required>
+            
+            <label for="interests">兴趣:</label>
+            <input type="text" id="interests" name="interests" required>
+            
+            <label for="companion_requirements">伴侣要求:</label>
+            <input type="text" id="companion_requirements" name="companion_requirements">
+            
+            <button type="submit">注册</button>
+        </form>
+    </main>
+    <footer>
+        <p>&copy; 2024 旅行助手。保留所有权利。</p>
+    </footer>
 </body>
 </html>
