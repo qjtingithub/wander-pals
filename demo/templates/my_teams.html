@@ -2,21 +2,25 @@
 {% extends "base.html" %}
 {% block title %}我的团队{% endblock %}
 {% block content %}
-<h2 class="text-center">我的团队</h2>
-<div class="list-group">
+<h2 class="text-center my-4">我的团队</h2>
+<div class="row">
     {% for team in teams %}
-        <div class="list-group-item">
-            <h3>{{ team.name }}</h3>
-            <p><strong>目的地:</strong> {{ team.destination }}</p>
-            <p><strong>时间:</strong> {{ team.time }}</p>
-            <p><strong>预算:</strong> {{ team.price }}</p>
-            <p><strong>同伴要求:</strong> {{ team.companion_requirements }}</p>
-            <h5>团队成员:</h5>
-            <ul>
-                {% for member in team.members %}
-                    <li>{{ member.username }}</li>
-                {% endfor %}
-            </ul>
+        <div class="col-md-6 mb-4">
+            <div class="card">
+                <div class="card-body">
+                    <h3 class="card-title">{{ team.name }}</h3>
+                    <p class="card-text"><strong>目的地:</strong> {{ team.destination }}</p>
+                    <p class="card-text"><strong>出行时间:</strong> {{ team.time }}</p>
+                    <p class="card-text"><strong>出行预算:</strong> {{ team.price }}</p>
+                    <p class="card-text"><strong>同伴要求:</strong> {{ team.companion_requirements }}</p>
+                    <h5 class="mt-4">团队成员:</h5>
+                    <ul class="list-group list-group-flush">
+                        {% for member in team.members %}
+                            <li class="list-group-item">{{ member.username }}</li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            </div>
         </div>
     {% endfor %}
 </div>

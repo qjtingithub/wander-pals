@@ -109,7 +109,8 @@ def create_team():
 @app.route('/team_invitation/<int:team_id>')
 def team_invitation(team_id):
     team = Team.query.get_or_404(team_id)
-    users = User.query.all()
+    current_user_id = session.get('user_id')
+    users = User.query.filter(User.id != current_user_id).all()
     return render_template('team_invitation.html', team_id=team.id, users=users)
 
 @app.route('/send_invitations', methods=['POST'])
@@ -270,8 +271,10 @@ def manage_invitations():
     if not user_id:
         return redirect(url_for('login'))
 
-    invitations = Invitation.query.filter_by(invitee_id=user_id).all()
-    return render_template('manage_invitations.html', invitations=invitations)
+    sent_invitations = Invitation.query.filter_by(inviter_id=user_id).all()
+    received_invitations = Invitation.query.filter_by(invitee_id=user_id).all()
+    return render_template('manage_invitations.html', sent_invitations=sent_invitations, received_invitations=received_invitations)
+
 
 @app.route('/respond_invitation/<int:invitation_id>/<string:response>', methods=['POST'])
 def respond_invitation(invitation_id, response):
