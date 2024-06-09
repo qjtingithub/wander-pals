@@ -21,6 +21,7 @@ def favicon():
 @app.route('/register', methods=['GET', 'POST'])
 def register():
     if request.method == 'POST':
+        user_id = request.form['user_id']
         username = request.form['username']
         password = request.form['password']
         age = request.form['age']
@@ -30,12 +31,17 @@ def register():
         interests = request.form['interests']
         companion_requirements = request.form['companion_requirements']
 
+        existing_user = User.query.get(user_id)
+        if existing_user:
+            flash('用户ID已存在，请选择其他用户ID。')
+            return redirect(url_for('register'))
+        
         existing_user = User.query.filter_by(username=username).first()
         if existing_user:
             flash('用户名已存在，请选择其他用户名。')
             return redirect(url_for('register'))
 
-        new_user = User(username=username, password=password, age=age, gender=gender, location=location,
+        new_user = User(id=user_id, username=username, password=password, age=age, gender=gender, location=location,
                         budget=budget, interests=interests, companion_requirements=companion_requirements)
         db.session.add(new_user)
         db.session.commit()
@@ -45,15 +51,15 @@ def register():
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     if request.method == 'POST':
-        username = request.form['username']
+        user_id = request.form['user_id']
         password = request.form['password']
         
-        user = User.query.filter_by(username=username, password=password).first()
+        user = User.query.filter_by(id=user_id, password=password).first()
         if user:
-            session['user_id'] = user.id
-            session['user_name'] = user.username
-            session['recommendation_index'] = 0  # Initialize recommendation index
+            session['user_id'] = user.id  # 在 session 中存储用户 ID
             return redirect(url_for('profile'))
+        else:
+            flash('无效的用户ID或密码')
     return render_template('login.html')
 
 @app.route('/profile', methods=['GET', 'POST'])
@@ -302,4 +308,5 @@ def my_teams():
 if __name__ == '__main__':
     with app.app_context():
         db.create_all()
-    app.run(debug=True)
+    app.run(host="10.243.58.126", port="8080", debug=True)
+
