@@ -8,17 +8,18 @@
         <div class="col-md-6 mb-4">
             <div class="card">
                 <div class="card-body">
-                    <h3 class="card-title">{{ team.name }}</h3>
+                    <!-- <h3 class="card-title">{{ team.name }}</h3> -->
+                    <h4 class="card-title" style="color: #007bff; font-weight: bold; margin-top: 10px; margin-bottom: 20px;">团队: {{  team.name }}</h4>
                     <p class="card-text"><strong>目的地:</strong> {{ team.destination }}</p>
                     <p class="card-text"><strong>出行时间:</strong> {{ team.time }}</p>
                     <p class="card-text"><strong>出行预算:</strong> {{ team.price }}</p>
                     <p class="card-text"><strong>同伴要求:</strong> {{ team.companion_requirements }}</p>
-                    <h5 class="mt-4">团队成员:</h5>
-                    <ul class="list-group list-group-flush">
+                    <p class="card-text"><strong>团队成员:</strong> {% for member in team.members %}{{ member.username }}{% if not loop.last %}、{% endif %}{% endfor %}</p>
+                    <!-- <ul class="list-group list-group-flush">
                         {% for member in team.members %}
                             <li class="list-group-item">{{ member.username }}</li>
                         {% endfor %}
-                    </ul>
+                    </ul> -->
                 </div>
             </div>
         </div>

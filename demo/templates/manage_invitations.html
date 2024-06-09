@@ -6,11 +6,11 @@
 
 <div class="row">
     <div class="col-md-6">
-        <h3 class="text-center">我发出的邀请</h3>
+        <h4 class="text-center">我发出的邀请</h4>
         <div class="list-group">
             {% for invitation in sent_invitations %}
                 <div class="list-group-item">
-                    <h5>团队: {{ invitation.team.name }}</h5>
+                    <h5 style="color: #007bff; font-weight: bold; margin-top: 10px; margin-bottom: 20px;">团队: {{ invitation.team.name }}</h5>
                     <p>被邀请人: {{ invitation.invitee.username }}</p>
                     <p>状态: {{ invitation.status }}</p>
                 </div>
@@ -18,17 +18,21 @@
         </div>
     </div>
 
+    <div class="col-md-0 d-flex align-items-center justify-content-center">
+        <!-- 这个 div 用于增加两栏之间的间距 -->
+    </div>
+
     <div class="col-md-6">
-        <h3 class="text-center">我收到的邀请</h3>
+        <h4 class="text-center">我收到的邀请</h4>
         <div class="list-group">
             {% for invitation in received_invitations %}
                 <div class="list-group-item">
-                    <h5>来自团队: {{ invitation.team.name }}</h5>
+                    <h5 style="color: #007bff; font-weight: bold; margin-top: 10px; margin-bottom: 20px;">团队: {{ invitation.team.name }}</h5>
                     <p>邀请人: {{ invitation.inviter.username }}</p>
                     <p>状态: {{ invitation.status }}</p>
                     {% if invitation.status == 'pending' %}
                         <form action="{{ url_for('respond_invitation', invitation_id=invitation.id, response='accept') }}" method="POST" style="display:inline;">
-                            <button type="submit" class="btn btn-success">接受</button>
+                            <button type="submit" class="btn btn-success" style="margin-bottom: 10px;">接受</button>
                         </form>
                         <form action="{{ url_for('respond_invitation', invitation_id=invitation.id, response='reject') }}" method="POST" style="display:inline;">
                             <button type="submit" class="btn btn-danger">拒绝</button>
