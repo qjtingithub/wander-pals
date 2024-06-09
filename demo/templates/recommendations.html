@@ -1,25 +1,18 @@
-<!DOCTYPE html>
-<html lang="zh-CN">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>推荐用户 - 旅行助手</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
-</head>
-<body>
-    <header>
-        <h1>推荐用户</h1>
-    </header>
-    <main>
-        <h2>推荐的用户</h2>
-        <ul>
-            {% for recommendation in recommendations %}
-            <li>{{ recommendation.username }}</li>
-            {% endfor %}
-        </ul>
-    </main>
-    <footer>
-        <p>&copy; 2024 旅行助手。保留所有权利。</p>
-    </footer>
-</body>
-</html>
+<!-- templates/recommendations.html -->
+{% extends "base.html" %}
+{% block title %}推荐旅游伴侣{% endblock %}
+{% block content %}
+<h2 class="text-center">推荐旅游伴侣</h2>
+{% if recommendation %}
+    <div class="recommendation-card">
+        <h4>用户名: {{ recommendation.username }}</h4>
+        <p>匹配评分: {{ score }}</p>
+        <form action="/recommendations" method="POST">
+            <button type="submit" name="action" value="invite" class="btn btn-success">邀请</button>
+            <button type="submit" name="action" value="next" class="btn btn-secondary">跳过</button>
+        </form>
+    </div>
+{% else %}
+    <p class="text-center">没有更多推荐</p>
+{% endif %}
+{% endblock %}

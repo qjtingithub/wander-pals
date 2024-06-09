@@ -1,25 +1,12 @@
-<!DOCTYPE html>
-<html lang="zh-CN">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>旅行助手</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
-</head>
-<body>
-    <header>
-        <h1>欢迎来到旅行助手</h1>
-    </header>
-    <main>
-        <h2>您的旅行伴侣</h2>
-        <p>规划您的旅行，寻找伴侣，轻松探索世界。</p>
-        <div class="button-container">
-            <a href="{{ url_for('login') }}">登录</a>
-            <a href="{{ url_for('register') }}">注册</a>
-        </div>
-    </main>
-    <footer>
-        <p>&copy; 2024 旅行助手。保留所有权利。</p>
-    </footer>
-</body>
-</html>
+<!-- templates/index.html -->
+<!-- templates/base.html -->
+
+{% extends "index_base.html" %}
+{% block title %}主页{% endblock %}
+{% block content %}
+<h1 class="text-center">欢迎来到旅游伴侣推荐系统</h1>
+<div class="text-center mt-4">
+    <a href="/register" class="btn btn-primary my-2">注册</a>
+    <a href="/login" class="btn btn-primary my-2">登录</a>
+</div>
+{% endblock %}

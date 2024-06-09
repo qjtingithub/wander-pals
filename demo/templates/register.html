@@ -1,46 +1,46 @@
-<!DOCTYPE html>
-<html lang="zh-CN">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>注册 - 旅行助手</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
-</head>
-<body>
-    <header>
-        <h1>注册</h1>
-    </header>
-    <main>
-        <form method="POST">
-            <label for="username">用户名:</label>
-            <input type="text" id="username" name="username" required>
-            
-            <label for="password">密码:</label>
-            <input type="password" id="password" name="password" required>
-            
-            <label for="age">年龄:</label>
-            <input type="number" id="age" name="age" required>
-            
-            <label for="gender">性别:</label>
-            <input type="text" id="gender" name="gender" required>
-            
-            <label for="location">所在地:</label>
-            <input type="text" id="location" name="location" required>
-            
-            <label for="budget">预算:</label>
-            <input type="text" id="budget" name="budget" required>
-            
-            <label for="interests">兴趣:</label>
-            <input type="text" id="interests" name="interests" required>
-            
-            <label for="companion_requirements">伴侣要求:</label>
-            <input type="text" id="companion_requirements" name="companion_requirements">
-            
-            <button type="submit">注册</button>
-        </form>
-    </main>
-    <footer>
-        <p>&copy; 2024 旅行助手。保留所有权利。</p>
-    </footer>
-</body>
-</html>
+<!-- templates/register.html -->
+{% extends "base.html" %}
+{% block title %}注册{% endblock %}
+{% block content %}
+<h2 class="text-center">注册</h2>
+<form action="/register" method="POST">
+    <div class="form-group">
+        <label for="username">用户名</label>
+        <input type="text" id="username" name="username" class="form-control" required>
+    </div>
+    <div class="form-group">
+        <label for="password">密码</label>
+        <input type="password" id="password" name="password" class="form-control" required>
+    </div>
+    <div class="form-group">
+        <label for="age">年龄</label>
+        <input type="number" id="age" name="age" class="form-control" required>
+    </div>
+    <div class="form-group">
+        <label for="gender">性别</label>
+        <select id="gender" name="gender" class="form-control" required>
+            <option value="">请选择性别</option>
+            <option value="male">男</option>
+            <option value="female">女</option>
+            <option value="other">其他</option>
+        </select>
+    </div>
+    <div class="form-group">
+        <label for="location">位置</label>
+        <input type="text" id="location" name="location" class="form-control" required>
+    </div>
+    <div class="form-group">
+        <label for="budget">预算</label>
+        <input type="text" id="budget" name="budget" class="form-control" required>
+    </div>
+    <div class="form-group">
+        <label for="interests">兴趣</label>
+        <input type="text" id="interests" name="interests" class="form-control" required>
+    </div>
+    <div class="form-group">
+        <label for="companion_requirements">同伴要求</label>
+        <input type="text" id="companion_requirements" name="companion_requirements" class="form-control">
+    </div>
+    <button type="submit" class="btn btn-primary">注册</button>
+</form>
+{% endblock %}

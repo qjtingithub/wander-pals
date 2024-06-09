@@ -44,11 +44,6 @@ def login():
             return redirect(url_for('profile'))
     return render_template('login.html')
 
-@app.route('/logout')
-def logout():
-    session.clear()
-    return redirect(url_for('index'))
-
 @app.route('/profile', methods=['GET', 'POST'])
 def profile():
     user_id = session.get('user_id')
@@ -206,6 +201,12 @@ def find_teams(itinerary):
 def request_join_team(team):
     # 请求加入团队的逻辑
     pass
+
+@app.route('/logout')
+def logout():
+    session.pop('user_id', None)
+    session.pop('recommendation_index', None)
+    return redirect(url_for('index'))
 
 if __name__ == '__main__':
     with app.app_context():

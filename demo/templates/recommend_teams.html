@@ -1,25 +1,39 @@
+<!-- templates/recommend_teams.html -->
 <!DOCTYPE html>
-<html lang="zh-CN">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>推荐团队 - 旅行助手</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <title>推荐团队</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+        .container {
+            max-width: 800px;
+            margin-top: 50px;
+        }
+        .team-card {
+            margin-bottom: 20px;
+            padding: 20px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+    </style>
 </head>
 <body>
-    <header>
-        <h1>推荐团队</h1>
-    </header>
-    <main>
-        <h2>推荐的团队</h2>
-        <ul>
-            {% for team in recommended_teams %}
-            <li>{{ team.name }} - {{ team.destination }}</li>
-            {% endfor %}
-        </ul>
-    </main>
-    <footer>
-        <p>&copy; 2024 旅行助手。保留所有权利。</p>
-    </footer>
+    <div class="container">
+        <h2 class="text-center">推荐团队</h2>
+        {% if team %}
+            <div class="team-card">
+                <h4>团队名称: {{ team.name }}</h4>
+                <p>行程目的地: {{ team.itinerary.destination }}</p>
+                <form action="/recommend_teams" method="POST">
+                    <button type="submit" name="action" value="request_join" class="btn btn-success">请求加入</button>
+                    <button type="submit" name="action" value="next" class="btn btn-secondary">跳过</button>
+                </form>
+            </div>
+        {% else %}
+            <p class="text-center">没有更多推荐团队</p>
+        {% endif %}
+    </div>
 </body>
 </html>

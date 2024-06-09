@@ -1,25 +1,22 @@
-<!DOCTYPE html>
-<html lang="zh-CN">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>写日志 - 旅行助手</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
-</head>
-<body>
-    <header>
-        <h1>写日志</h1>
-    </header>
-    <main>
-        <form method="POST">
-            <label for="content">内容:</label>
-            <textarea id="content" name="content" required></textarea>
-            
-            <button type="submit">提交</button>
-        </form>
-    </main>
-    <footer>
-        <p>&copy; 2024 旅行助手。保留所有权利。</p>
-    </footer>
-</body>
-</html>
+<!-- templates/log.html -->
+{% extends "base.html" %}
+{% block title %}日志记录{% endblock %}
+{% block content %}
+<h2 class="text-center">日志记录</h2>
+<form action="/log" method="POST">
+    <div class="form-group">
+        <label for="content">日志内容</label>
+        <textarea id="content" name="content" class="form-control" rows="5" required></textarea>
+    </div>
+    <button type="submit" class="btn btn-primary">提交</button>
+</form>
+<hr>
+<h3>日志记录</h3>
+{% for log in logs %}
+    <div class="card mt-3">
+        <div class="card-body">
+            <p>{{ log.content }}</p>
+        </div>
+    </div>
+{% endfor %}
+{% endblock %}
