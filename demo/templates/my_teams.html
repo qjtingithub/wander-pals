@@ -1,30 +1,23 @@
-<!-- templates/invitations.html -->
+<!-- templates/my_teams.html -->
 {% extends "base.html" %}
-{% block title %}查看邀请{% endblock %}
+{% block title %}我的团队{% endblock %}
 {% block content %}
-<h2 class="text-center">收到的邀请</h2>
-{% for invitation in received_invitations %}
-    <div class="card mt-3">
-        <div class="card-body">
-            <p>来自: {{ invitation.sender.username }}</p>
-            <p>状态: {{ invitation.status }}</p>
-            <form action="/respond_invitation/{{ invitation.id }}/accepted" method="POST" style="display: inline;">
-                <button type="submit" class="btn btn-success">接受</button>
-            </form>
-            <form action="/respond_invitation/{{ invitation.id }}/declined" method="POST" style="display: inline;">
-                <button type="submit" class="btn btn-danger">拒绝</button>
-            </form>
+<h2 class="text-center">我的团队</h2>
+<div class="list-group">
+    {% for team in teams %}
+        <div class="list-group-item">
+            <h3>{{ team.name }}</h3>
+            <p><strong>目的地:</strong> {{ team.destination }}</p>
+            <p><strong>时间:</strong> {{ team.time }}</p>
+            <p><strong>预算:</strong> {{ team.price }}</p>
+            <p><strong>同伴要求:</strong> {{ team.companion_requirements }}</p>
+            <h5>团队成员:</h5>
+            <ul>
+                {% for member in team.members %}
+                    <li>{{ member.username }}</li>
+                {% endfor %}
+            </ul>
         </div>
-    </div>
-{% endfor %}
-<hr>
-<h2 class="text-center">发送的邀请</h2>
-{% for invitation in sent_invitations %}
-    <div class="card mt-3">
-        <div class="card-body">
-            <p>发送给: {{ invitation.receiver.username }}</p>
-            <p>状态: {{ invitation.status }}</p>
-        </div>
-    </div>
-{% endfor %}
+    {% endfor %}
+</div>
 {% endblock %}

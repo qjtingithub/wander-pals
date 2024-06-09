@@ -289,6 +289,15 @@ def respond_invitation(invitation_id, response):
     db.session.commit()
     return redirect(url_for('manage_invitations'))
 
+@app.route('/my_teams')
+def my_teams():
+    user_id = session.get('user_id')
+    if not user_id:
+        return redirect(url_for('login'))
+    
+    user = User.query.get(user_id)
+    teams = user.teams
+    return render_template('my_teams.html', teams=teams)
 
 if __name__ == '__main__':
     with app.app_context():
