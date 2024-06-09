@@ -41,9 +41,11 @@ class Recommendation(db.Model):
 class Team(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(120), nullable=False)
-    itinerary_id = db.Column(db.Integer, db.ForeignKey('itinerary.id'), nullable=False)
+    destination = db.Column(db.String(120), nullable=False)
+    time = db.Column(db.String(120), nullable=False)
+    price = db.Column(db.String(120), nullable=False)
+    companion_requirements = db.Column(db.String(500), nullable=False)
     creator_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
-    itinerary = db.relationship('Itinerary', backref=db.backref('teams', lazy=True))
     creator = db.relationship('User', backref=db.backref('created_teams', lazy=True))
     members = db.relationship('User', secondary='team_members', backref=db.backref('teams', lazy=True))
 
@@ -54,9 +56,12 @@ class TeamMember(db.Model):
 
 class Invitation(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    sender_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
-    receiver_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
-    status = db.Column(db.String(20), nullable=False, default='pending')
-    sender = db.relationship('User', foreign_keys=[sender_id], backref='sent_invitations')
-    receiver = db.relationship('User', foreign_keys=[receiver_id], backref='received_invitations')
+    team_id = db.Column(db.Integer, db.ForeignKey('team.id'), nullable=False)
+    inviter_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+    invitee_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+    status = db.Column(db.String(20), nullable=False, default='pending')  # pending, accepted, rejected
+    team = db.relationship('Team', backref=db.backref('invitations', lazy=True))
+    inviter = db.relationship('User', foreign_keys=[inviter_id], backref=db.backref('sent_invitations', lazy=True))
+    invitee = db.relationship('User', foreign_keys=[invitee_id], backref=db.backref('received_invitations', lazy=True))
+
 

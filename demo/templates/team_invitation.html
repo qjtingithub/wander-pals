@@ -1,0 +1,30 @@
+<!-- templates/team_invitation.html -->
+{% extends "base.html" %}
+{% block title %}邀请成员{% endblock %}
+{% block content %}
+<h2 class="text-center">邀请成员加入团队</h2>
+<form action="/send_invitations" method="POST" id="invitationForm">
+    <input type="hidden" name="team_id" value="{{ team_id }}">
+    <div class="list-group">
+        {% for user in users %}
+            <div class="list-group-item">
+                <h5>{{ user.username }}</h5>
+                <p>年龄: {{ user.age }}</p>
+                <p>位置: {{ user.location }}</p>
+                <button type="submit" name="user_id" value="{{ user.id }}" class="btn btn-primary invite-btn" onclick="disableButton(this)">发送邀请</button>
+            </div>
+        {% endfor %}
+    </div>
+</form>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    function disableButton(button) {
+        button.disabled = true;
+        button.classList.remove('btn-primary');
+        button.classList.add('btn-secondary');
+        button.textContent = '已发送';
+    }
+</script>
+{% endblock %}

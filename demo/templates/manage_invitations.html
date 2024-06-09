@@ -1,0 +1,23 @@
+<!-- templates/manage_invitations.html -->
+{% extends "base.html" %}
+{% block title %}管理邀请{% endblock %}
+{% block content %}
+<h2 class="text-center">团队邀请</h2>
+<div class="list-group">
+    {% for invitation in invitations %}
+        <div class="list-group-item">
+            <h5>来自团队: {{ invitation.team.name }}</h5>
+            <p>邀请人: {{ invitation.inviter.username }}</p>
+            <p>状态: {{ invitation.status }}</p>
+            {% if invitation.status == 'pending' %}
+                <form action="{{ url_for('respond_invitation', invitation_id=invitation.id, response='accept') }}" method="POST" style="display:inline;">
+                    <button type="submit" class="btn btn-success">接受</button>
+                </form>
+                <form action="{{ url_for('respond_invitation', invitation_id=invitation.id, response='reject') }}" method="POST" style="display:inline;">
+                    <button type="submit" class="btn btn-danger">拒绝</button>
+                </form>
+            {% endif %}
+        </div>
+    {% endfor %}
+</div>
+{% endblock %}

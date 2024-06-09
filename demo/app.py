@@ -51,6 +51,7 @@ def login():
         user = User.query.filter_by(username=username, password=password).first()
         if user:
             session['user_id'] = user.id
+            session['user_name'] = user.username
             session['recommendation_index'] = 0  # Initialize recommendation index
             return redirect(url_for('profile'))
     return render_template('login.html')
@@ -71,31 +72,59 @@ def profile():
         # 如果用户未登录，则重定向到登录页面
         return redirect(url_for('login'))
 
-@app.route('/create_itinerary', methods=['GET', 'POST'])
-def create_itinerary():
+@app.route('/create_team', methods=['GET', 'POST'])
+def create_team():
+    user_id = session.get('user_id')
+    if not user_id:
+        return redirect(url_for('login'))
+
     if request.method == 'POST':
+        team_name = request.form['team_name']
         destination = request.form['destination']
         time = request.form['time']
         price = request.form['price']
         companion_requirements = request.form['companion_requirements']
-        
-        new_itinerary = Itinerary(user_id=session['user_id'], destination=destination, time=time,
-                                  price=price, companion_requirements=companion_requirements)
-        db.session.add(new_itinerary)
+
+        new_team = Team(name=team_name, destination=destination, time=time,
+                        price=price, companion_requirements=companion_requirements, creator_id=user_id)
+        db.session.add(new_team)
         db.session.commit()
 
-        return redirect(url_for('recommendations'))  # Redirect to recommendations
-    return render_template('create_itinerary.html')
+        # 将创建者添加为团队成员
+        user = User.query.get(user_id)
+        new_team.members.append(user)
+        db.session.commit()
 
-@app.route('/create_team', methods=['GET', 'POST'])
-def create_team():
-    if request.method == 'POST':
-        create_team = request.form.get('create_team')
-        if create_team == 'yes':
-            return redirect(url_for('recommendations'))
-        else:
-            return redirect(url_for('profile'))
+        flash('团队创建成功！')
+        return redirect(url_for('team_invitation', team_id=new_team.id))
+
     return render_template('create_team.html')
+
+@app.route('/team_invitation/<int:team_id>')
+def team_invitation(team_id):
+    team = Team.query.get_or_404(team_id)
+    users = User.query.all()
+    return render_template('team_invitation.html', team_id=team.id, users=users)
+
+@app.route('/send_invitations', methods=['POST'])
+def send_invitations():
+    team_id = request.form['team_id']
+    user_id = request.form['user_id']
+
+    team = Team.query.get_or_404(team_id)
+    user = User.query.get_or_404(user_id)
+    inviter_id = session['user_id']
+
+    if user not in team.members:
+        invitation = Invitation(team_id=team_id, inviter_id=inviter_id, invitee_id=user_id)
+        db.session.add(invitation)
+        db.session.commit()
+        flash(f'已向 {user.username} 发送邀请！')
+    else:
+        flash(f'{user.username} 已经是团队成员！')
+
+    return redirect(url_for('team_invitation', team_id=team_id))
+
 
 @app.route('/recommendations', methods=['GET', 'POST'])
 def recommendations():
@@ -176,14 +205,6 @@ def routes():
     # This would contain logic for interacting with map APIs to display routes
     return "Routes feature coming soon!"
 
-@app.route('/send_invitation/<int:user_id>', methods=['POST'])
-def send_invitation(user_id):
-    sender_id = session['user_id']
-    invitation = Invitation(sender_id=sender_id, receiver_id=user_id, status='pending')
-    db.session.add(invitation)
-    db.session.commit()
-    return redirect(url_for('recommendations'))
-
 @app.route('/invitations')
 def invitations():
     user_id = session['user_id']
@@ -191,13 +212,13 @@ def invitations():
     sent_invitations = Invitation.query.filter_by(sender_id=user_id).all()
     return render_template('invitations.html', received_invitations=received_invitations, sent_invitations=sent_invitations)
 
-@app.route('/respond_invitation/<int:invitation_id>/<string:response>', methods=['POST'])
-def respond_invitation(invitation_id, response):
-    invitation = Invitation.query.get(invitation_id)
-    if invitation and invitation.receiver_id == session['user_id']:
-        invitation.status = response
-        db.session.commit()
-    return redirect(url_for('invitations'))
+# @app.route('/respond_invitation/<int:invitation_id>/<string:response>', methods=['POST'])
+# def respond_invitation(invitation_id, response):
+#     invitation = Invitation.query.get(invitation_id)
+#     if invitation and invitation.receiver_id == session['user_id']:
+#         invitation.status = response
+#         db.session.commit()
+#     return redirect(url_for('invitations'))
 
 def invite_user(user_id):
     sender_id = session['user_id']
@@ -236,6 +257,38 @@ def edit_log(log_id):
             db.session.commit()
             return redirect(url_for('log'))
     return render_template('edit_log.html', log=log)
+
+@app.route('/manage_invitations')
+def manage_invitations():
+    user_id = session.get('user_id')
+    if not user_id:
+        return redirect(url_for('login'))
+
+    invitations = Invitation.query.filter_by(invitee_id=user_id).all()
+    return render_template('manage_invitations.html', invitations=invitations)
+
+@app.route('/respond_invitation/<int:invitation_id>/<string:response>', methods=['POST'])
+def respond_invitation(invitation_id, response):
+    invitation = Invitation.query.get_or_404(invitation_id)
+    if invitation.invitee_id != session.get('user_id'):
+        flash('你无权操作此邀请。')
+        return redirect(url_for('manage_invitations'))
+
+    if response == 'accept':
+        invitation.status = 'accepted'
+        # 添加到团队成员
+        team = Team.query.get(invitation.team_id)
+        user = User.query.get(invitation.invitee_id)
+        if user not in team.members:
+            team.members.append(user)
+        flash('你已接受邀请。')
+    elif response == 'reject':
+        invitation.status = 'rejected'
+        flash('你已拒绝邀请。')
+
+    db.session.commit()
+    return redirect(url_for('manage_invitations'))
+
 
 if __name__ == '__main__':
     with app.app_context():

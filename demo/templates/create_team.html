@@ -5,12 +5,25 @@
 <h2 class="text-center">创建团队</h2>
 <form action="/create_team" method="POST">
     <div class="form-group">
-        <label for="create_team">是否创建团队?</label>
-        <select id="create_team" name="create_team" class="form-control" required>
-            <option value="yes">是</option>
-            <option value="no">否</option>
-        </select>
+        <label for="team_name">团队名称</label>
+        <input type="text" id="team_name" name="team_name" class="form-control" required>
     </div>
-    <button type="submit" class="btn btn-primary">提交</button>
+    <div class="form-group">
+        <label for="destination">目的地</label>
+        <input type="text" id="destination" name="destination" class="form-control" required>
+    </div>
+    <div class="form-group">
+        <label for="time">时间</label>
+        <input type="date" id="time" name="time" class="form-control" required>
+    </div>
+    <div class="form-group">
+        <label for="price">价格</label>
+        <input type="text" id="price" name="price" class="form-control" required>
+    </div>
+    <div class="form-group">
+        <label for="companion_requirements">同伴要求</label>
+        <input type="text" id="companion_requirements" name="companion_requirements" class="form-control">
+    </div>
+    <button type="submit" class="btn btn-primary">创建团队</button>
 </form>
 {% endblock %}
