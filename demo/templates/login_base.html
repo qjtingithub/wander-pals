@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% block title %}{% endblock %}</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/bootstrap.min.css') }}">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
 </head>
 <body>
@@ -17,22 +17,7 @@
         <div class="collapse navbar-collapse" id="navbarNav">
             <ul class="navbar-nav ml-auto">
                 <li class="nav-item">
-                    <a class="nav-link" href="/profile">个人资料</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="/create_itinerary">创建行程</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="/log">撰写日志</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="/recommendations">查看推荐</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="/routes">查看路线</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="/invitations">查看邀请</a>
+                    <a class="nav-link" href="/logout">首页</a>
                 </li>
             </ul>
         </div>
