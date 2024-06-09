@@ -73,7 +73,7 @@ def create_itinerary():
         db.session.add(new_itinerary)
         db.session.commit()
 
-        return redirect(url_for('recommendations'))  # Redirect to create team
+        return redirect(url_for('recommendations'))  # Redirect to recommendations
     return render_template('create_itinerary.html')
 
 @app.route('/create_team', methods=['GET', 'POST'])
