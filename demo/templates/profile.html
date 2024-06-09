@@ -5,15 +5,15 @@
 <h2 class="text-center">用户资料</h2>
 <form action="/profile" method="POST">
     <div class="form-group">
-        <label for="location">位置</label>
+        <label for="location">所在地</label>
         <input type="text" id="location" name="location" class="form-control" value="{{ user.location }}" required>
     </div>
     <div class="form-group">
-        <label for="budget">预算</label>
+        <label for="budget">出行预算</label>
         <input type="text" id="budget" name="budget" class="form-control" value="{{ user.budget }}" required>
     </div>
     <div class="form-group">
-        <label for="interests">兴趣</label>
+        <label for="interests">旅行兴趣</label>
         <input type="text" id="interests" name="interests" class="form-control" value="{{ user.interests }}" required>
     </div>
     <button type="submit" class="btn btn-primary">保存</button>

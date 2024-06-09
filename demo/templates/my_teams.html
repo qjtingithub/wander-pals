@@ -1,0 +1,30 @@
+<!-- templates/invitations.html -->
+{% extends "base.html" %}
+{% block title %}查看邀请{% endblock %}
+{% block content %}
+<h2 class="text-center">收到的邀请</h2>
+{% for invitation in received_invitations %}
+    <div class="card mt-3">
+        <div class="card-body">
+            <p>来自: {{ invitation.sender.username }}</p>
+            <p>状态: {{ invitation.status }}</p>
+            <form action="/respond_invitation/{{ invitation.id }}/accepted" method="POST" style="display: inline;">
+                <button type="submit" class="btn btn-success">接受</button>
+            </form>
+            <form action="/respond_invitation/{{ invitation.id }}/declined" method="POST" style="display: inline;">
+                <button type="submit" class="btn btn-danger">拒绝</button>
+            </form>
+        </div>
+    </div>
+{% endfor %}
+<hr>
+<h2 class="text-center">发送的邀请</h2>
+{% for invitation in sent_invitations %}
+    <div class="card mt-3">
+        <div class="card-body">
+            <p>发送给: {{ invitation.receiver.username }}</p>
+            <p>状态: {{ invitation.status }}</p>
+        </div>
+    </div>
+{% endfor %}
+{% endblock %}
