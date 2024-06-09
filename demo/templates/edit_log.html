@@ -1,0 +1,14 @@
+<!-- templates/edit_log.html -->
+{% extends "base.html" %}
+{% block title %}编辑日志{% endblock %}
+{% block content %}
+<h2 class="text-center">编辑日志</h2>
+<form action="/log/edit/{{ log.id }}" method="POST">
+    <div class="form-group">
+        <label for="content">日志内容</label>
+        <textarea id="content" name="content" class="form-control" rows="5" required>{{ log.content }}</textarea>
+    </div>
+    <button type="submit" class="btn btn-primary">保存</button>
+    <a href="{{ url_for('log') }}" class="btn btn-primary my-2">取消</a>
+</form>
+{% endblock %}

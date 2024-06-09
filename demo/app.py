@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, redirect, url_for, session, send_from_directory
+from flask import Flask, render_template, request, redirect, url_for, session, send_from_directory, flash
 from models import db, User, Itinerary, Log, Recommendation, Team, Invitation
 from utils import find_team, recommend_itinerary
 from flask_sqlalchemy import SQLAlchemy
@@ -29,6 +29,11 @@ def register():
         budget = request.form['budget']
         interests = request.form['interests']
         companion_requirements = request.form['companion_requirements']
+
+        existing_user = User.query.filter_by(username=username).first()
+        if existing_user:
+            flash('用户名已存在，请选择其他用户名。')
+            return redirect(url_for('register'))
 
         new_user = User(username=username, password=password, age=age, gender=gender, location=location,
                         budget=budget, interests=interests, companion_requirements=companion_requirements)
@@ -213,6 +218,24 @@ def logout():
     session.pop('user_id', None)
     session.pop('recommendation_index', None)
     return redirect(url_for('index'))
+
+@app.route('/log/delete/<int:log_id>', methods=['POST'])
+def delete_log(log_id):
+    log = Log.query.get(log_id)
+    if log and log.user_id == session['user_id']:
+        db.session.delete(log)
+        db.session.commit()
+    return redirect(url_for('log'))
+
+@app.route('/log/edit/<int:log_id>', methods=['GET', 'POST'])
+def edit_log(log_id):
+    log = Log.query.get(log_id)
+    if request.method == 'POST':
+        if log and log.user_id == session['user_id']:
+            log.content = request.form['content']
+            db.session.commit()
+            return redirect(url_for('log'))
+    return render_template('edit_log.html', log=log)
 
 if __name__ == '__main__':
     with app.app_context():

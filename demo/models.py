@@ -1,5 +1,5 @@
 # models.py
-
+from datetime import datetime
 from flask_sqlalchemy import SQLAlchemy
 
 db = SQLAlchemy()
@@ -28,6 +28,7 @@ class Log(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
     content = db.Column(db.Text, nullable=False)
+    timestamp = db.Column(db.DateTime, default=datetime.utcnow)  # 添加时间戳字段
     user = db.relationship('User', backref=db.backref('logs', lazy=True))
 
 class Recommendation(db.Model):

@@ -16,6 +16,13 @@
     <div class="card mt-3">
         <div class="card-body">
             <p>{{ log.content }}</p>
+            <p class="text-muted">发布时间: {{ log.timestamp.strftime('%Y-%m-%d %H:%M:%S') }}</p>
+            <div class="d-flex justify-content-start">
+                <form action="/log/delete/{{ log.id }}" method="POST" class="btn-form">
+                    <button type="submit" class="btn btn-custom">删除</button>
+                </form>
+                <a href="/log/edit/{{ log.id }}" class="btn btn-custom">编辑</a>
+            </div>
         </div>
     </div>
 {% endfor %}

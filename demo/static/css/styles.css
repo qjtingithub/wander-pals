@@ -65,3 +65,19 @@ body {
     color: white; /* 保持文字颜色不变 */
     border-radius: 5px; /* 圆角边框 */
 }
+
+/* Custom styles for log buttons */
+.btn-form {
+    margin-right: 10px;
+}
+
+.btn-custom {
+    width: 100px;
+    color: white;
+    background-color: #007bff; /* 统一按钮颜色 */
+    border: none;
+}
+
+.btn-custom:hover {
+    background-color: #0056b3;
+}
