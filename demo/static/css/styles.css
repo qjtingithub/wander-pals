@@ -38,3 +38,30 @@ body {
     border: 1px solid #ddd;
     border-radius: 5px;
 }
+
+/* Custom styles for index page buttons */
+.my-2 {
+    margin-top: 0.5rem !important;
+    margin-bottom: 0.5rem !important;
+}
+
+/* Custom styles for navbar */
+.navbar-custom {
+    background-color: #4d4d4d; /* 深色背景 */
+    color: white;
+}
+
+.navbar-custom .navbar-brand,
+.navbar-custom .nav-link {
+    color: white;
+}
+
+.navbar-custom .nav-link:hover {
+    color: #dfdddd; /* 鼠标悬停颜色 */
+}
+
+.navbar-custom .nav-link.active {
+    background-color: #383838; /* 点击后的背景颜色 */
+    color: white; /* 保持文字颜色不变 */
+    border-radius: 5px; /* 圆角边框 */
+}
