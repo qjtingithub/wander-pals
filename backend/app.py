@@ -4,8 +4,11 @@ from utils import find_team, recommend_itinerary
 from flask_sqlalchemy import SQLAlchemy
 import os
 
-app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///traveller_assistant.db'
+# 前端路径配置
+app = Flask(__name__, template_folder="../frontend/templates", static_folder="../frontend/static")
+
+# 数据库路径配置
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///../database/traveller_assistant.db'
 app.config['SECRET_KEY'] = 'your_secret_key'
 db.init_app(app)
 
