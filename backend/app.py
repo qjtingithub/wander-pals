@@ -255,7 +255,6 @@ def chat():
     user_message = data.get('message')
     if user_message:
         try:
-            print("ooasdfjaospfgahgoghiaofd")
             api_url = "https://api.moonshot.cn/v1/chat/completions"
             headers = {
                 "Authorization": "sk-YrR3zPUQA3GSd0NmQuPZh9UdkcU3qFq60xXMMJgL2qRmqEgj",
