@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, redirect, url_for, session, send_from_directory, flash
+from flask import Flask, render_template, request, redirect, url_for, session, send_from_directory, flash, jsonify
 from models import db, User, Itinerary, Log, Recommendation, Team, Invitation
 from utils import find_team, recommend_itinerary
 from flask_sqlalchemy import SQLAlchemy
@@ -242,6 +242,50 @@ def routes():
                 success = 0
     
     return render_template('routes.html', location=location, latitude=latitude, longitude=longitude, success=success)
+
+
+# sk-YrR3zPUQA3GSd0NmQuPZh9UdkcU3qFq60xXMMJgL2qRmqEgj
+@app.route('/chat')
+def chat_page():
+    return render_template('chat.html')
+
+@app.route('/chat', methods=['POST'])
+def chat():
+    data = request.get_json()
+    user_message = data.get('message')
+    if user_message:
+        try:
+            print("ooasdfjaospfgahgoghiaofd")
+            api_url = "https://api.moonshot.cn/v1/chat/completions"
+            headers = {
+                "Authorization": "sk-YrR3zPUQA3GSd0NmQuPZh9UdkcU3qFq60xXMMJgL2qRmqEgj",
+                "Content-Type": "application/json"
+            }
+            payload = {
+                "model": "moonshot-v1-8k",
+                "messages": [
+                    {"role": "system", "content": "你是 Wander Pals 出行小助手，由 4014 AI 提供的人工智能出行助手，你更擅长中文和英文的对话。\
+                     你会为用户提供安全，有帮助，准确的回答。\
+                     同时，你会拒绝一切涉及恐怖主义，种族歧视，黄色暴力等问题的回答。"},
+                    {"role": "user", "content": user_message}
+                ],
+                "temperature": 0.3
+            }
+            response = requests.post(api_url, headers=headers, json=payload)
+            response_content = response.content.decode('utf-8')
+            print(f"Kimi API response: {response_content}")
+
+            response_data = response.json()
+            if response.status_code == 200 and 'choices' in response_data:
+                reply = response_data['choices'][0]['message']['content']
+                return jsonify({"success": True, "reply": reply})
+            else:
+                return jsonify({"success": False}), 500
+        except Exception as e:
+            print(f"Error calling Kimi API: {e}")
+            return jsonify({"success": False}), 500
+    else:
+        return jsonify({"success": False}), 400
 
 @app.route('/invitations')
 def invitations():

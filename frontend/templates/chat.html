@@ -1,0 +1,96 @@
+<!-- templates/chat.html -->
+{% extends "base.html" %}
+{% block title %}出行小助手{% endblock %}
+{% block content %}
+<style>
+    .chat-container {
+        max-width: 1000px;
+        margin: 0 auto;
+        padding: 0px;
+    }
+    .input-group {
+        display: flex;
+        align-items: center;
+    }
+    .input-group-append {
+        display: flex;
+        align-items: stretch;
+    }
+    .input-group-append .btn {
+        height: auto;
+        background-color: #007bff;
+        color: white;
+        border: none;
+        padding: 9.2px 20px;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+    .input-group-append .btn:hover {
+        background-color: #0056b3;
+    }
+    .markdown-container {
+        border: 1px solid #ddd;
+        padding: 10px;
+        height: 800px;
+        overflow-y: auto;
+        margin-top: 20px;
+    }
+</style>
+<div class="chat-container">
+    <div class="input-group mb-3">
+        <input type="text" id="user-input" class="form-control" placeholder="输入消息...">
+        <div class="input-group-append">
+            <button id="send-button" class="btn" type="button">提问</button>
+        </div>
+    </div>
+    <div class="markdown-container" id="markdown-content">
+        请在输入框输入您的问题，然后点击提问
+    </div>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/highlight.js/lib/core.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/highlight.js/lib/languages/javascript.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/highlight.js/styles/default.min.css"></script>
+<script type="text/javascript">
+    document.getElementById('send-button').addEventListener('click', function() {
+        var userInput = document.getElementById('user-input').value;
+        if (userInput.trim() !== "") {
+            renderMarkdown("请耐心等待，小助手正在思考您的问题");
+            sendChatMessage(userInput);
+            document.getElementById('user-input').value = "";
+        }
+    });
+
+    function sendChatMessage(message) {
+        fetch('/chat', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ message: message })
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                renderMarkdown(data.reply);
+            } else {
+                renderMarkdown("发生错误，请稍后再试。");
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            renderMarkdown("发生错误，请稍后再试。");
+        });
+    }
+
+    function renderMarkdown(markdownText) {
+        var markdownContainer = document.getElementById('markdown-content');
+        markdownContainer.innerHTML = marked.parse(markdownText);
+        document.querySelectorAll('pre code').forEach((block) => {
+            hljs.highlightBlock(block);
+        });
+    }
+</script>
+{% endblock %}
