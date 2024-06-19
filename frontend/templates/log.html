@@ -5,13 +5,13 @@
 <h2 class="text-center">日志记录</h2>
 <form action="/log" method="POST">
     <div class="form-group">
-        <label for="content">日志内容</label>
+        <h4>撰写日志</h4>
         <textarea id="content" name="content" class="form-control" rows="5" required></textarea>
     </div>
     <button type="submit" class="btn btn-primary">提交</button>
 </form>
 <hr>
-<h3>日志记录</h3>
+<h4>历史日志</h4>
 {% for log in logs %}
     <div class="card mt-3">
         <div class="card-body">

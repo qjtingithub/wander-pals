@@ -1,7 +1,36 @@
-.<!-- templates/routes.html -->
+<!-- templates/routes.html -->
 {% extends "base.html" %}
 {% block title %}查看路线{% endblock %}
 {% block content %}
-<h2 class="text-center">查看路线</h2>
-<p>路线功能即将推出！</p>
+<div class="container">
+    <h2 class="text-center">查看路线</h2>
+    <div id="map-container" style="width: 100%; height: 700px;">
+        <div id="container" style="width: 100%; height: 100%;"></div>
+    </div>
+    <p id="status" class="text-center"></p>
+</div>
+<script src="https://webapi.amap.com/maps?v=1.4.15&key=bb4993ff4181dbf670467a87e90da585"></script>
+<script type="text/javascript">
+    // 获取后端传递的经纬度
+    var user_location = "{{ location }}";
+    var latitude = {{ latitude }};
+    var longitude = {{ longitude }};
+    var success = {{ success }};
+
+    // 初始化地图
+    var map = new AMap.Map('container', {
+        resizeEnable: true,
+        center: [longitude, latitude], // 使用传递的经纬度信息
+        zoom: 15 // 调整地图缩放级别
+    });
+
+    function showStatus(message) {
+        document.getElementById('status').innerHTML = message;
+    }
+
+    // 设置初始位置状态
+    // if(success) showStatus(user_location + ' 定位成功：经度 ' + longitude + '，纬度 ' + latitude);
+    if(success) showStatus(user_location + ' 定位成功');
+    else showStatus(user_location + ' 定位失败');
+</script>
 {% endblock %}

@@ -3,6 +3,7 @@ from models import db, User, Itinerary, Log, Recommendation, Team, Invitation
 from utils import find_team, recommend_itinerary
 from flask_sqlalchemy import SQLAlchemy
 import os
+import requests
 
 # 前端路径配置
 app = Flask(__name__, template_folder="../frontend/templates", static_folder="../frontend/static")
@@ -210,10 +211,37 @@ def log():
     user_logs = Log.query.filter_by(user_id=session['user_id']).all()
     return render_template('log.html', logs=user_logs)
 
+# 地理编码
+def get_coordinates(location, api_key):
+    geocode_url = f'https://restapi.amap.com/v3/geocode/geo?key={api_key}&address={location}'
+    response = requests.get(geocode_url, timeout=5)
+    response.raise_for_status()
+    return response.json()
+
 @app.route('/routes')
 def routes():
-    # This would contain logic for interacting with map APIs to display routes
-    return "Routes feature coming soon!"
+    user_id = session.get('user_id')
+    location = '北京天安门'
+    latitude = 39.90923  # 默认纬度（天安门广场）
+    longitude = 116.397428  # 默认经度（天安门广场）
+    success = 1
+
+    if user_id:
+        user = User.query.get(user_id)
+        if user and user.location:
+            location = user.location
+            api_key = 'bb473ee6868451fd16466294cf236a05'
+            try:
+                data = get_coordinates(location, api_key)
+                if data['status'] == '1' and data['geocodes']:
+                    geocode = data['geocodes'][0]
+                    longitude, latitude = map(float, geocode['location'].split(','))
+            except requests.exceptions.RequestException as e:
+                print(f"Error fetching geocode: {e}")
+                location = user.location
+                success = 0
+    
+    return render_template('routes.html', location=location, latitude=latitude, longitude=longitude, success=success)
 
 @app.route('/invitations')
 def invitations():
@@ -306,7 +334,6 @@ def my_teams():
     user_id = session.get('user_id')
     if not user_id:
         return redirect(url_for('login'))
-    
     user = User.query.get(user_id)
     teams = user.teams
     return render_template('my_teams.html', teams=teams)
