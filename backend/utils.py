@@ -61,6 +61,35 @@ def find_team(user):
     
     return recommendations
 
+def calculate_match_score(current_user, user_to_match, team):
+    # 计算用户与当前用户所建团队的匹配度
+    score = 0
+
+    # 权重分配
+    weights = {
+        'age': 0.1,
+        'budget': 0.5,
+        'interests': 0.2,
+        'requirements': 0.1,
+        'location': 0.1
+    }
+
+    # 年龄差距
+    score_age =  1 - (abs(user_to_match.age - current_user.age) / 120)
+    # 价格要求
+    score_bugdet = (int(user_to_match.budget) >= int(team.price))
+    # 旅行兴趣
+    score_interest = (team.destination.lower() in user_to_match.interests.lower())
+    # 同伴要求
+    score_requirements = (user_to_match.interests.lower() in team.companion_requirements.lower())
+    # 位置匹配
+    score_location = (current_user.location.lower() in user_to_match.location.lower())
+
+    score = weights['age'] * score_age + weights['budget'] * score_bugdet + weights['interests'] * score_interest + weights['requirements'] * score_requirements + weights['location'] * score_location
+
+    return score * 100
+
+
 def recommend_itinerary(user):
     # Placeholder logic for recommending itineraries
     itineraries = Itinerary.query.all()

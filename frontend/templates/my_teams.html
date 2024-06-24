@@ -20,6 +20,14 @@
                             <li class="list-group-item">{{ member.username }}</li>
                         {% endfor %}
                     </ul> -->
+                    <div class="btn-group">
+                        <form action="/my_teams/delete/{{ team.id }}" method="POST" class="btn-form">
+                            <button type="submit" class="btn btn-custom">删除团队</button>
+                        </form>
+                        <form action="/my_teams/invite_member/{{ team.id }}" method="POST" class="btn-form">
+                            <button type="submit" class="btn btn-custom">邀请成员</button>
+                        </form>
+                    </div>
                 </div>
             </div>
         </div>

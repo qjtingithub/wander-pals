@@ -11,6 +11,7 @@
                 <h5>{{ user.username }}</h5>
                 <p>年龄: {{ user.age }}</p>
                 <p>位置: {{ user.location }}</p>
+                <p>匹配度: {{ "%.1f" | format(match_score[user.id]) }}%</p>
                 <button type="submit" name="user_id" value="{{ user.id }}" class="btn btn-primary invite-btn" onclick="disableButton(this)">发送邀请</button>
             </div>
         {% endfor %}

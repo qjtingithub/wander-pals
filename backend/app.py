@@ -1,6 +1,6 @@
 from flask import Flask, render_template, request, redirect, url_for, session, send_from_directory, flash, jsonify
 from models import db, User, Itinerary, Log, Recommendation, Team, Invitation
-from utils import find_team, recommend_itinerary
+from utils import find_team, recommend_itinerary, calculate_match_score
 from flask_sqlalchemy import SQLAlchemy
 import os
 import requests
@@ -114,8 +114,14 @@ def create_team():
 def team_invitation(team_id):
     team = Team.query.get_or_404(team_id)
     current_user_id = session.get('user_id')
+    current_user = User.query.filter(User.id == current_user_id).first()
     users = User.query.filter(User.id != current_user_id).all()
-    return render_template('team_invitation.html', team_id=team.id, users=users)
+    match_score = {}
+    for user in users:
+        score = calculate_match_score(current_user, user, team)
+        match_score[user.id] = score
+
+    return render_template('team_invitation.html', team_id=team.id, users=users, match_score=match_score)
 
 @app.route('/send_invitations', methods=['POST'])
 def send_invitations():
@@ -381,8 +387,33 @@ def my_teams():
     teams = user.teams
     return render_template('my_teams.html', teams=teams)
 
+# 删除团队
+@app.route('/my_teams/delete/<int:team_id>', methods=['POST'])
+def delete_team(team_id):
+    team = Team.query.get_or_404(team_id)
+    if team.creator_id != session.get('user_id'):
+        flash('你无权操作此团队。')
+        return redirect(url_for('my_teams'))
+
+    db.session.delete(team)
+    db.session.commit()
+    flash('团队已删除。')
+    return redirect(url_for('my_teams'))
+
+# 团队成员邀请
+@app.route('/my_teams/invite_member/<int:team_id>', methods=['GET', 'POST'])
+def invite_member(team_id):
+    team = Team.query.get_or_404(team_id)
+    if team.creator_id != session.get('user_id'):
+        flash('你无权操作此团队。')
+        return redirect(url_for('my_teams'))
+    
+    return redirect(url_for('team_invitation', team_id=team.id))
+    
+
 if __name__ == '__main__':
     with app.app_context():
         db.create_all()
-    app.run(host="10.243.58.126", port="8080", debug=True)
+    # app.run(host="10.243.58.126", port="8080", debug=True)
+    app.run(port="8080", debug=True)
 
