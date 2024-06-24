@@ -220,35 +220,88 @@ def log():
 # 地理编码
 def get_coordinates(location, api_key):
     geocode_url = f'https://restapi.amap.com/v3/geocode/geo?key={api_key}&address={location}'
-    response = requests.get(geocode_url, timeout=5)
+    try:
+        response = requests.get(geocode_url, timeout=5)
+        response.raise_for_status()
+        data = response.json()
+        print(f"Response data for location '{location}': {data}")  # 添加调试信息
+        return data
+    except requests.exceptions.RequestException as e:
+        print(f"Error fetching coordinates for location '{location}': {e}")
+        return {'status': '0', 'geocodes': []}
+
+# 路径规划
+def get_route(start_coords, end_coords, api_key):
+    route_url = f'https://restapi.amap.com/v5/direction/driving?key={api_key}&origin={start_coords}&destination={end_coords}'
+    response = requests.get(route_url, timeout=5)
     response.raise_for_status()
     return response.json()
 
-@app.route('/routes')
+@app.route('/routes', methods=['GET', 'POST'])
 def routes():
-    user_id = session.get('user_id')
-    location = '北京天安门'
-    latitude = 39.90923  # 默认纬度（天安门广场）
-    longitude = 116.397428  # 默认经度（天安门广场）
-    success = 1
+    if request.method == 'POST':
+        data = request.get_json()
+        start = data.get('start')
+        end = data.get('end')
+        api_key = '3267903b43db8de397eb98660f8c8b1f'
 
-    if user_id:
-        user = User.query.get(user_id)
-        if user and user.location:
-            location = user.location
-            api_key = 'bb473ee6868451fd16466294cf236a05'
-            try:
-                data = get_coordinates(location, api_key)
-                if data['status'] == '1' and data['geocodes']:
-                    geocode = data['geocodes'][0]
-                    longitude, latitude = map(float, geocode['location'].split(','))
-            except requests.exceptions.RequestException as e:
-                print(f"Error fetching geocode: {e}")
-                location = user.location
-                success = 0
-    
-    return render_template('routes.html', location=location, latitude=latitude, longitude=longitude, success=success)
+        try:
+            start_data = get_coordinates(start, api_key)
+            end_data = get_coordinates(end, api_key)
 
+            if start_data['status'] == '1' and end_data['status'] == '1' and start_data['geocodes'] and end_data['geocodes']:
+                start_geocode = start_data['geocodes'][0]
+                end_geocode = end_data['geocodes'][0]
+                start_longitude, start_latitude = start_geocode['location'].split(',')
+                end_longitude, end_latitude = end_geocode['location'].split(',')
+
+                start_coords = f"{start_longitude},{start_latitude}"
+                end_coords = f"{end_longitude},{end_latitude}"
+
+                route_data = get_route(start_coords, end_coords, api_key)
+
+                if route_data['status'] == '1':
+                    response_data = {
+                        'success': True,
+                        'start_longitude': float(start_longitude),
+                        'start_latitude': float(start_latitude),
+                        'end_longitude': float(end_longitude),
+                        'end_latitude': float(end_latitude),
+                        'route': route_data
+                    }
+                    return jsonify(response_data)
+                else:
+                    response_data = {'success': False, 'message': '无法获取路径规划数据'}
+                    return jsonify(response_data)
+            else:
+                response_data = {'success': False, 'message': '无法获取出发地或目的地的坐标'}
+                return jsonify(response_data)
+
+        except requests.exceptions.RequestException as e:
+            response_data = {'success': False, 'message': str(e)}
+            return jsonify(response_data)
+    else:
+        user_id = session.get('user_id')
+        location = '北京天安门'
+        latitude = 39.90923  # 默认纬度（天安门广场）
+        longitude = 116.397428  # 默认经度（天安门广场）
+        success = 1
+
+        if user_id:
+            user = db.session.get(User, user_id)
+            if user and user.location:
+                api_key = '3267903b43db8de397eb98660f8c8b1f'
+                try:
+                    data = get_coordinates(location, api_key)
+                    if data['status'] == '1' and data['geocodes']:
+                        geocode = data['geocodes'][0]
+                        longitude, latitude = map(float, geocode['location'].split(','))
+                except requests.exceptions.RequestException as e:
+                    print(f"Error fetching geocode: {e}")
+                    location = user.location
+                    success = 0
+        
+        return render_template('routes.html', location=location, latitude=latitude, longitude=longitude, success=success)
 
 # sk-YrR3zPUQA3GSd0NmQuPZh9UdkcU3qFq60xXMMJgL2qRmqEgj
 @app.route('/chat')
@@ -414,6 +467,5 @@ def invite_member(team_id):
 if __name__ == '__main__':
     with app.app_context():
         db.create_all()
-    # app.run(host="10.243.58.126", port="8080", debug=True)
-    app.run(port="8080", debug=True)
+    app.run(host="127.0.0.1", port="8080", debug=True)
 

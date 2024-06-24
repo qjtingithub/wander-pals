@@ -4,33 +4,78 @@
 {% block content %}
 <div class="container">
     <h2 class="text-center">查看路线</h2>
+    <form id="route-form" class="mb-4">
+        <div class="form-group">
+            <label for="start">出发地</label>
+            <input type="text" class="form-control" id="start" name="start" required>
+        </div>
+        <div class="form-group">
+            <label for="end">目的地</label>
+            <input type="text" class="form-control" id="end" name="end" required>
+        </div>
+        <button type="submit" class="btn btn-primary">查看路线</button>
+    </form>
     <div id="map-container" style="width: 100%; height: 700px;">
         <div id="container" style="width: 100%; height: 100%;"></div>
     </div>
     <p id="status" class="text-center"></p>
 </div>
-<script src="https://webapi.amap.com/maps?v=1.4.15&key=bb4993ff4181dbf670467a87e90da585"></script>
+<script src="https://webapi.amap.com/maps?v=2.0&key=16939ccf884880218c90f211b4b4d237&plugin=AMap.ToolBar,AMap.Driving"></script>
 <script type="text/javascript">
-    // 获取后端传递的经纬度
-    var user_location = "{{ location }}";
-    var latitude = {{ latitude }};
-    var longitude = {{ longitude }};
-    var success = {{ success }};
+    window._AMapSecurityConfig = {
+          securityJsCode:'35fd25ffebfaf36bf528553448c1aed5',
+    }
 
-    // 初始化地图
     var map = new AMap.Map('container', {
         resizeEnable: true,
-        center: [longitude, latitude], // 使用传递的经纬度信息
-        zoom: 15 // 调整地图缩放级别
+        zoom: 10
     });
 
     function showStatus(message) {
         document.getElementById('status').innerHTML = message;
     }
 
-    // 设置初始位置状态
-    // if(success) showStatus(user_location + ' 定位成功：经度 ' + longitude + '，纬度 ' + latitude);
-    if(success) showStatus(user_location + ' 定位成功');
-    else showStatus(user_location + ' 定位失败');
+    document.getElementById('route-form').addEventListener('submit', function(event) {
+        event.preventDefault();
+        var start = document.getElementById('start').value;
+        var end = document.getElementById('end').value;
+
+        fetch('/routes', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ start: start, end: end })
+        })
+        .then(response => response.json())
+        .then(data => {
+            console.log(data);  // 调试信息
+            if (data.success) {
+                var startLngLat = [data.start_longitude, data.start_latitude];
+                var endLngLat = [data.end_longitude, data.end_latitude];
+
+                map.setCenter(startLngLat);
+
+                var driving = new AMap.Driving({
+                    map: map,
+                    panel: "panel"
+                });
+
+                driving.search(new AMap.LngLat(startLngLat[0], startLngLat[1]), new AMap.LngLat(endLngLat[0], endLngLat[1]), function(status, result) {
+                    if (status === 'complete') {
+                        showStatus('路线规划成功');
+                    } else {
+                        showStatus('路线规划失败：' + result);
+                    }
+                });
+            } else {
+                showStatus('获取路线失败：' + data.message);
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);  // 捕获错误
+            showStatus('获取路线失败：' + error);
+        });
+    });
 </script>
 {% endblock %}

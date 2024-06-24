@@ -7,8 +7,35 @@
     <link rel="icon" href="{{ url_for('static', filename='images/logo.ico') }}" type="image/x-icon">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/bootstrap.min.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+    <style>
+        body {
+            background-image: url("{{ url_for('static', filename='images/background.jpg') }}");
+            background-size: cover;
+            background-attachment: fixed;
+            background-position: center;
+            color: #fff; /* Ensure text is white by default for better readability */
+            position: relative;
+        }
+        .overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5); /* Black with 50% opacity */
+            z-index: 1;
+        }
+        .content {
+            position: relative;
+            z-index: 2; /* Ensure content is above the overlay */
+        }
+        .navbar-custom {
+            z-index: 3; /* Ensure navbar is above the overlay */
+        }
+    </style>
 </head>
 <body>
+    <div class="overlay"></div> <!-- Add overlay here -->
     <nav class="navbar navbar-expand-lg navbar-custom">
         <a class="navbar-brand" href="/">旅游伴侣</a>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
@@ -46,8 +73,10 @@
             </ul>
         </div>
     </nav>
-    <div class="container mt-4">
-        {% block content %}{% endblock %}
+    <div class="content">
+        <div class="container mt-4">
+            {% block content %}{% endblock %}
+        </div>
     </div>
     <script>
         document.addEventListener('DOMContentLoaded', function() {
