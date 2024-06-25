@@ -23,7 +23,7 @@
 <script src="https://webapi.amap.com/maps?v=2.0&key=16939ccf884880218c90f211b4b4d237&plugin=AMap.ToolBar,AMap.Driving"></script>
 <script type="text/javascript">
     window._AMapSecurityConfig = {
-          securityJsCode:'35fd25ffebfaf36bf528553448c1aed5',
+        securityJsCode: '35fd25ffebfaf36bf528553448c1aed5',
     }
 
     var map = new AMap.Map('container', {
@@ -36,46 +36,62 @@
     }
 
     document.getElementById('route-form').addEventListener('submit', function(event) {
-        event.preventDefault();
-        var start = document.getElementById('start').value;
-        var end = document.getElementById('end').value;
+    event.preventDefault();
+    var start = document.getElementById('start').value;
+    var end = document.getElementById('end').value;
 
-        fetch('/routes', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({ start: start, end: end })
-        })
-        .then(response => response.json())
-        .then(data => {
-            console.log(data);  // 调试信息
-            if (data.success) {
-                var startLngLat = [data.start_longitude, data.start_latitude];
-                var endLngLat = [data.end_longitude, data.end_latitude];
+    fetch('/routes', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ start: start, end: end })
+    })
+    .then(response => response.json())
+    .then(data => {
+        console.log(data);  // 调试信息
+        if (data.success) {
+            console.log('Route:', data.route);  // 打印route数据进行调试
+            var startLngLat = [data.start_longitude, data.start_latitude];
+            var endLngLat = [data.end_longitude, data.end_latitude];
 
-                map.setCenter(startLngLat);
+            map.setCenter(startLngLat);
 
-                var driving = new AMap.Driving({
-                    map: map,
-                    panel: "panel"
-                });
-
-                driving.search(new AMap.LngLat(startLngLat[0], startLngLat[1]), new AMap.LngLat(endLngLat[0], endLngLat[1]), function(status, result) {
-                    if (status === 'complete') {
-                        showStatus('路线规划成功');
-                    } else {
-                        showStatus('路线规划失败：' + result);
+            if (data.route && data.route.steps) {
+                var path = data.route.steps.flatMap(step => {
+                    if (step.polyline) {
+                        return step.polyline.split(';').map(point => {
+                            var [lng, lat] = point.split(',').map(Number);
+                            return new AMap.LngLat(lng, lat);
+                        });
                     }
+                    return [];
                 });
+
+                console.log('Path:', path);  // 打印路径数据进行调试
+
+                var polyline = new AMap.Polyline({
+                    path: path,
+                    borderWeight: 2,
+                    strokeColor: 'blue',
+                    lineJoin: 'round'
+                });
+
+                map.add(polyline);
+                map.setFitView([polyline]);  // 调整视图以适应路径
+                showStatus('路线规划成功');
             } else {
-                showStatus('获取路线失败：' + data.message);
+                showStatus('路线数据格式不正确');
             }
-        })
-        .catch(error => {
-            console.error('Error:', error);  // 捕获错误
-            showStatus('获取路线失败：' + error);
-        });
+        } else {
+            showStatus('获取路线失败：' + data.message);
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);  // 捕获错误
+        showStatus('获取路线失败：' + error);
     });
+});
+
 </script>
 {% endblock %}
