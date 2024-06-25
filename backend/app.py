@@ -132,7 +132,16 @@ def send_invitations():
     user = User.query.get_or_404(user_id)
     inviter_id = session['user_id']
 
+    invitations = Invitation.query.filter(Invitation.team_id == team_id).all()
+
     if user not in team.members:
+        if invitations:
+            for invitation in invitations:
+                if user.id == invitation.invitee_id:
+                    flash(f'{user.username} 已经收到过邀请！')
+                    return redirect(url_for('team_invitation', team_id=team_id))
+            del(invitation)
+
         invitation = Invitation(team_id=team_id, inviter_id=inviter_id, invitee_id=user_id)
         db.session.add(invitation)
         db.session.commit()
@@ -407,6 +416,18 @@ def manage_invitations():
     sent_invitations = Invitation.query.filter_by(inviter_id=user_id).all()
     received_invitations = Invitation.query.filter_by(invitee_id=user_id).all()
     return render_template('manage_invitations.html', sent_invitations=sent_invitations, received_invitations=received_invitations)
+
+@app.route('/manage_invitations/delete/<int:invitation_id>', methods=['POST'])
+def manage_invitation_delete(invitation_id):
+    invitation = Invitation.query.get_or_404(invitation_id)
+    if invitation.inviter_id != session.get('user_id'):
+        flash('你无权操作此邀请。')
+        return redirect(url_for('manage_invitations'))
+
+    db.session.delete(invitation)
+    db.session.commit()
+    flash('邀请已删除。')
+    return redirect(url_for('manage_invitations'))
 
 
 @app.route('/respond_invitation/<int:invitation_id>/<string:response>', methods=['POST'])

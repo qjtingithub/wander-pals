@@ -2,10 +2,18 @@
 {% extends "base.html" %}
 {% block title %}邀请成员{% endblock %}
 {% block content %}
+<!-- 显示错误消息 -->
+{% with messages = get_flashed_messages() %}
+  {% if messages %}
+    <div class="alert alert-danger" role="alert">
+      {{ messages[0] }}
+    </div>
+  {% endif %}
+{% endwith %}
 <h2 class="text-center">邀请成员加入团队</h2>
 <form action="/send_invitations" method="POST" id="invitationForm">
     <input type="hidden" name="team_id" value="{{ team_id }}">
-    <div class="list-group">
+    <div class="list-group" style="color: #000; opacity: 0.75;">
         {% for user in users %}
             <div class="list-group-item">
                 <h5>{{ user.username }}</h5>

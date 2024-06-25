@@ -3,7 +3,7 @@
 {% block title %}用户资料{% endblock %}
 {% block content %}
 <h2 class="text-center">用户资料</h2>
-<form action="/profile" method="POST">
+<form action="/profile" method="POST" style="opacity: 0.75;">
     <div class="form-group">
         <label for="location">所在地</label>
         <input type="text" id="location" name="location" class="form-control" value="{{ user.location }}" required>
@@ -19,7 +19,7 @@
     <button type="submit" class="btn btn-primary">保存</button>
 </form>
 
-<div class="options">
+<div class="options" style="opacity: 0.75;">
     <a href="/logout" class="btn btn-danger btn-option">登出</a>
 </div>
 {% endblock %}

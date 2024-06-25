@@ -4,15 +4,26 @@
 {% block content %}
 <h2 class="text-center my-4">团队邀请</h2>
 
+<!-- 显示错误消息 -->
+{% with messages = get_flashed_messages() %}
+  {% if messages %}
+    <div class="alert alert-danger" role="alert">
+      {{ messages[0] }}
+    </div>
+  {% endif %}
+{% endwith %}
 <div class="row">
     <div class="col-md-6">
         <h4 class="text-center">我发出的邀请</h4>
-        <div class="list-group">
+        <div class="list-group" style="color: #000; opacity: 0.75;">
             {% for invitation in sent_invitations %}
                 <div class="list-group-item">
                     <h5 style="color: #007bff; font-weight: bold; margin-top: 10px; margin-bottom: 20px;">团队: {{ invitation.team.name }}</h5>
                     <p>被邀请人: {{ invitation.invitee.username }}</p>
                     <p>状态: {{ invitation.status }}</p>
+                    <form action="/manage_invitations/delete/{{ invitation.id }}" method="POST" class="btn-form">
+                        <button type="submit" class="btn btn-custom">删除</button>
+                    </form>
                 </div>
             {% endfor %}
         </div>
@@ -24,7 +35,7 @@
 
     <div class="col-md-6">
         <h4 class="text-center">我收到的邀请</h4>
-        <div class="list-group">
+        <div class="list-group" style="color: #000; opacity: 0.75;">
             {% for invitation in received_invitations %}
                 <div class="list-group-item">
                     <h5 style="color: #007bff; font-weight: bold; margin-top: 10px; margin-bottom: 20px;">团队: {{ invitation.team.name }}</h5>

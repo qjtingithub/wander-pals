@@ -6,7 +6,7 @@
 <form action="/log/edit/{{ log.id }}" method="POST">
     <div class="form-group">
         <label for="content">日志内容</label>
-        <textarea id="content" name="content" class="form-control" rows="5" required>{{ log.content }}</textarea>
+        <textarea id="content" name="content" class="form-control" rows="5" required style="color: #000; opacity: 0.75;">{{ log.content }}</textarea>
     </div>
     <button type="submit" class="btn btn-primary">保存</button>
     <a href="{{ url_for('log') }}" class="btn btn-primary my-2">取消</a>

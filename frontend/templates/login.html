@@ -2,6 +2,14 @@
 {% extends "login_base.html" %}
 {% block title %}登录{% endblock %}
 {% block content %}
+<!-- 显示错误消息 -->
+{% with messages = get_flashed_messages() %}
+  {% if messages %}
+    <div class="alert alert-danger" role="alert">
+      {{ messages[0] }}
+    </div>
+  {% endif %}
+{% endwith %}
 <h2 class="text-center">登录</h2>
 <form action="/login" method="POST">
     <div class="form-group">
