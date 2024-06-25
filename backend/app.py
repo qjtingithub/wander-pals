@@ -224,18 +224,19 @@ def get_coordinates(location, api_key):
         response = requests.get(geocode_url, timeout=5)
         response.raise_for_status()
         data = response.json()
-        print(f"Response data for location '{location}': {data}")  # 添加调试信息
+        # print(f"Response data for location '{location}': {data}")  # 添加调试信息
         return data
     except requests.exceptions.RequestException as e:
         print(f"Error fetching coordinates for location '{location}': {e}")
         return {'status': '0', 'geocodes': []}
 
-# 路径规划
 def get_route(start_coords, end_coords, api_key):
-    route_url = f'https://restapi.amap.com/v5/direction/driving?key={api_key}&origin={start_coords}&destination={end_coords}'
+    route_url = f'https://restapi.amap.com/v3/direction/driving?key={api_key}&origin={start_coords}&destination={end_coords}'
     response = requests.get(route_url, timeout=5)
     response.raise_for_status()
-    return response.json()
+    data = response.json()
+    print(f"Route data: {data}")  # 添加调试信息
+    return data
 
 @app.route('/routes', methods=['GET', 'POST'])
 def routes():
@@ -243,7 +244,7 @@ def routes():
         data = request.get_json()
         start = data.get('start')
         end = data.get('end')
-        api_key = '3267903b43db8de397eb98660f8c8b1f'
+        api_key = '3267903b43db8de397eb98660f8c8b1f'  # 使用 web 服务的 API Key
 
         try:
             start_data = get_coordinates(start, api_key)
@@ -260,14 +261,15 @@ def routes():
 
                 route_data = get_route(start_coords, end_coords, api_key)
 
-                if route_data['status'] == '1':
+                if route_data['status'] == '1' and 'paths' in route_data['route'] and route_data['route']['paths']:
+                    #route_data = extract_polyline(route_data)
                     response_data = {
                         'success': True,
                         'start_longitude': float(start_longitude),
                         'start_latitude': float(start_latitude),
                         'end_longitude': float(end_longitude),
                         'end_latitude': float(end_latitude),
-                        'route': route_data
+                        'route': route_data['route']['paths'][0]  # 获取第一条路径
                     }
                     return jsonify(response_data)
                 else:
@@ -302,6 +304,8 @@ def routes():
                     success = 0
         
         return render_template('routes.html', location=location, latitude=latitude, longitude=longitude, success=success)
+
+
 
 # sk-YrR3zPUQA3GSd0NmQuPZh9UdkcU3qFq60xXMMJgL2qRmqEgj
 @app.route('/chat')
