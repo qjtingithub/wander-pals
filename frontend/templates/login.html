@@ -11,7 +11,7 @@
   {% endif %}
 {% endwith %}
 <h2 class="text-center">登录</h2>
-<form action="/login" method="POST">
+<form action="/login" method="POST" style="opacity: 0.75;">
     <div class="form-group">
         <label for="user_id">用户ID</label>
         <input type="text" id="user_id" name="user_id" class="form-control" required>
@@ -20,6 +20,11 @@
         <label for="password">密码</label>
         <input type="password" id="password" name="password" class="form-control" required>
     </div>
-    <button type="submit" class="btn btn-primary">登录</button>
+    <button type="submit" class="btn btn-primary">登录</button>    
+    <div class="form-group">
+      <br>
+        <text>还没有账号？</text>
+    </div>
+    <a href="/register" class="btn btn-primary">注册</a>
 </form>
 {% endblock %}

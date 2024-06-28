@@ -13,7 +13,7 @@
   {% endif %}
 {% endwith %}
 
-<form action="/register" method="POST">
+<form action="/register" method="POST" style="opacity: 0.75;">
     <div class="form-group">
         <label for="user_id">用户ID</label>
         <input type="text" id="user_id" name="user_id" class="form-control" required>
@@ -55,5 +55,10 @@
         <input type="text" id="companion_requirements" name="companion_requirements" class="form-control">
     </div>
     <button type="submit" class="btn btn-primary">注册</button>
+    <div class="form-group">
+        <br>
+          <text>已有账号？</text>
+      </div>
+      <a href="/login" class="btn btn-primary">登录</a>
 </form>
 {% endblock %}

@@ -424,7 +424,7 @@ def manage_invitations():
 @app.route('/manage_invitations/delete/<int:invitation_id>', methods=['POST'])
 def manage_invitation_delete(invitation_id):
     invitation = Invitation.query.get_or_404(invitation_id)
-    if invitation.inviter_id != session.get('user_id'):
+    if invitation.inviter_id != session.get('user_id') and invitation.invitee_id != session.get('user_id'):
         flash('你无权操作此邀请。')
         return redirect(url_for('manage_invitations'))
 
@@ -473,6 +473,10 @@ def delete_team(team_id):
         flash('你无权操作此团队。')
         return redirect(url_for('my_teams'))
 
+    invitation = Invitation.query.filter_by(team_id=team_id).first()
+    db.session.delete(invitation)
+    db.session.commit()
+
     db.session.delete(team)
     db.session.commit()
     flash('团队已删除。')
@@ -492,5 +496,6 @@ def invite_member(team_id):
 if __name__ == '__main__':
     with app.app_context():
         db.create_all()
-    app.run(host="127.0.0.1", port="8080", debug=True)
+    app.run(host="10.243.229.231", port="16", debug=True)
+    # app.run(host="127.0.0.1", port="8080", debug=True)
 

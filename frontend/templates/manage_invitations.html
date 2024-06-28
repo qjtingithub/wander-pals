@@ -49,6 +49,11 @@
                             <button type="submit" class="btn btn-danger">拒绝</button>
                         </form>
                     {% endif %}
+                    {% if invitation.status == 'accepted' or invitation.status =='rejected' %}
+                    <form action="/manage_invitations/delete/{{ invitation.id }}" method="POST" class="btn-form">
+                        <button type="submit" class="btn btn-custom">删除</button>
+                    </form>
+                    {% endif %}
                 </div>
             {% endfor %}
         </div>

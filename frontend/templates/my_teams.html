@@ -2,6 +2,15 @@
 {% extends "base.html" %}
 {% block title %}我的团队{% endblock %}
 {% block content %}
+<!-- 显示错误消息 -->
+{% with messages = get_flashed_messages() %}
+  {% if messages %}
+    <div class="alert alert-danger" role="alert">
+      {{ messages[0] }}
+    </div>
+  {% endif %}
+{% endwith %}
+
 <h2 class="text-center my-4">我的团队</h2>
 <div class="row" style="color: #000; opacity: 0.75;">
     {% for team in teams %}
