@@ -16,7 +16,7 @@
     <div class="card mt-3" style="color: #000; opacity: 0.8;">
         <div class="card-body">
             <p>{{ log.content }}</p>
-            <p class="text-muted">发布时间: {{ log.timestamp.strftime('%Y-%m-%d %H:%M:%S') }}</p>
+            <p class="text-muted">发布时间: {{ log.timestamp.strftime('%Y-%m-%d') }}</p>
             <div class="d-flex justify-content-start">
                 <form action="/log/delete/{{ log.id }}" method="POST" class="btn-form">
                     <button type="submit" class="btn btn-custom">删除</button>

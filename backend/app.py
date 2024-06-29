@@ -474,8 +474,9 @@ def delete_team(team_id):
         return redirect(url_for('my_teams'))
 
     invitation = Invitation.query.filter_by(team_id=team_id).first()
-    db.session.delete(invitation)
-    db.session.commit()
+    if invitation:
+        db.session.delete(invitation)
+        db.session.commit()
 
     db.session.delete(team)
     db.session.commit()
